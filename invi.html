@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(120deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .card {
+            width: min(95vw, 520px);
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 16px 35px rgba(0, 0, 0, .22);
+            padding: 18px;
+            text-align: center;
+            overflow: hidden;
+            transform-origin: center;
+            animation: entrance .6s ease forwards;
+        }
+
+        .card h1 {
+            margin: 0 0 12px;
+            font-size: 1.4rem;
+            color: #333;
+        }
+
+        .card img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin: 14px 0;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: all .45s ease;
+            object-fit: cover;
+            display: none;
+        }
+
+        .card img.visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn {
+            border: none;
+            outline: none;
+            padding: 12px 16px;
+            font-size: 1rem;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #5a9cfb, #2f6fe2);
+            color: white;
+            cursor: pointer;
+            transition: transform .2s ease, box-shadow .2s ease;
+            margin: 8px 4px;
+            width: calc(100% - 16px);
+            max-width: 340px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 18px rgba(47, 111, 226, .32);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .info {
+            color: #555;
+            font-size: .9rem;
+            margin: 8px 0 0;
+            min-height: 24px;
+        }
+
+        @keyframes entrance {
+            from {
+                opacity: 0;
+                transform: scale(.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes flipIn {
+            0% {
+                transform: rotateX(-90deg);
+                opacity: 0;
+            }
+
+            100% {
+                transform: rotateX(0);
+                opacity: 1;
+            }
+        }
+
+        .flip {
+            animation: flipIn .5s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+
+        <img id="img1" src="./1.jpg" alt="Imagen 1" onerror="this.alt='1.jpg no encontrado'; this.style.opacity='0.6';">
+        <img id="img2" src="./2.jpg" alt="Imagen 2" onerror="this.alt='2.jpg no encontrado'; this.style.opacity='0.6';"
+            class="hidden">
+        <img id="img3" src="./3.jpg" alt="Imagen 3" onerror="this.alt='3.jpg no encontrado'; this.style.opacity='0.6';"
+            class="hidden">
+
+        <button id="btnOpen" class="btn">Abrir invitación</button>
+        <button id="btnContinue" class="btn hidden">Continuar</button>
+        <button id="btnLocation" class="btn hidden">Mostrar ubicación</button>
+    </div>
+
+    <script>
+        const btnOpen = document.getElementById('btnOpen');
+        const btnContinue = document.getElementById('btnContinue');
+        const btnLocation = document.getElementById('btnLocation');
+        const info = document.getElementById('info');
+        const img1 = document.getElementById('img1');
+        const img2 = document.getElementById('img2');
+        const img3 = document.getElementById('img3');
+
+        function showImage(img) {
+            img.classList.remove('hidden');
+            img.classList.add('visible', 'flip');
+            setTimeout(() => img.classList.remove('flip'), 600);
+        }
+
+        btnOpen.addEventListener('click', () => {
+            btnOpen.classList.add('hidden');
+            showImage(img1);
+            btnContinue.classList.remove('hidden');
+        });
+
+        btnContinue.addEventListener('click', () => {
+            if (!img2.classList.contains('visible')) {
+                showImage(img2);
+                info.textContent = 'Siguiente parte: detalles especiales.';
+                return;
+            }
+            btnContinue.classList.add('hidden');
+            img1.classList.add('hidden');
+            img2.classList.add('hidden');
+            img3.classList.remove('hidden');
+            showImage(img3);
+            btnLocation.classList.remove('hidden');
+        });
+
+        btnLocation.addEventListener('click', () => {
+            const url = 'https://maps.app.goo.gl/JrDXTNBZXREbZKrt9';
+            window.open(url, '_blank');
+        });
+
+        // small touch: show first image only after load for smooth transition
+        img1.addEventListener('load', () => {
+            if (img1.classList.contains('visible')) img1.classList.remove('hidden');
+        });
+    </script>
+</body>
+
+</html>
